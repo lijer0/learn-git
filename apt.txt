@@ -1,0 +1,100 @@
+杂：
+~sudo apt install tree
+~sudo apt install htop
+
+
+SSH:
+~sudo apt install ssh
+*~sudo apt install openssh-server	＃服务端
+*~sudo apt install openssh-client	＃客户端
+--service ssh start
+客户端操作：
+--ssh-keygen
+--ssh-copy-id user@IP（服务端）
+客户端配置：
+  ~/.ssh/config
+	host 别名（服务端）
+	hostname IP（服务端）
+	user 用户名（服务端）
+	port 22
+	PermitRootLogin yes #是否允许root登陆
+
+
+GIT:
+~sudo apt install git
+--git config --global user.name 'lijer0'
+--git config --global user.email 34694700@qq.com
+--git init <目录> （创建仓库）
+--git add <文件名> （1，添加）
+--git status （查看修改 -s 简要信息）
+--git diff <文件名> （查看详细）
+--git commit -m <备注信息> （2，提交）（--git commit -am <备注> '省去 git add 操作'）
+--git reset --hard HEAD^ （退回）
+--git reset --hard <id号>
+--git log （--oneline 简洁版;--reverse 逆向;--author 指定用户） --git reflog
+--git checkout -- <文件名> （用版本库替换工作区文件）
+--git rm <文件名> （其他参数：-f/-r/--cached） --git mv （移动或重命名）
+--git clone <仓库地址> <本地目录> （克隆仓库）
+--git branch （创建分支）（--git branch -d xxx 删除分支）
+--git switch （切换分支）（--git switch -c xxx /--git checkout -b xxx 创建并切换）
+--git merge （合并分支;-no-ff -m 'xxx'）
+--git tag （标签）
+--git stash （暂存工作区）
+--git pull 
+--git rebase 
+远程仓库github:
+--git init
+--git remote add origin git@github.com:lijer0/learn-git.git
+--git push -u origin master (仅第一次使用添加 -u 参数，以后推送时省略)
+
+
+PYTHON:
+~sudo apt install python3
+~sudo apt install python3-pip
+
+
+MYSQL:
+~sudo apt install mysql-server
+~sudo apt install mysql-client
+*~sudo apt install libmysqlclient-dev    //程序编译时链接的库
+--service mysql start
+--service mysql stop
+--service mysql status
+默认密码问题：
+--sudo cat /etc/mysql/debian.cnf 查看：<password>
+--mysql -u debian-sys-maint -p<password>
+--show databases;
+--use mysql;
+--update user set authentication_string=password('1234') where user='root';
+--update user set plugin='mysql_native_password';
+--flush privileges;
+--quit;
+--/etc/init.d/mysql restart 或--service mysql restart
+
+
+WINE:
+~sudo apt wine-stable
+~sudo apt winetricks
+~winecfg
+~winetricks
+--wine uninstaller
+--wine xxx.exe	#--wine start xxx.xxx
+运行Winetricks
+安装字体：corefonts
+安装DLL或组件：gdiplus d3dx9 vcrun2003 vcrun2005 vcrun2008 vcrun2010 riched20 riched30
+winetricks corefonts colorprofile
+winetricks fontfix fontsmooth-gray fontsmooth-rgb fontsmooth-bgr
+winetricks gdiplus
+winetricks d3dx9
+winetricks riched20 riched30
+winetricks vcrun2003 vcrun2005 vcrun2008
+winetricks mfc40 mfc42
+winetricks msxml3 msxml4 msxml6
+
+sudo dpkg --add-architecture i386 
+wget -nc https://dl.winehq.org/wine-builds/winehq.key
+sudo apt-key add winehq.key
+sudo apt-add-repository 'deb https://dl.winehq.org/wine-builds/ubuntu/ bionic main'
+sudo apt update
+sudo apt install --install-recommends winehq-stable
+
