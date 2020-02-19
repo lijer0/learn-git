@@ -2,9 +2,9 @@
 ~sudo apt install tree
 ~sudo apt install htop
 --向日葵安装后~
-	sudo apt-get update
-	sudo apt-get upgrade
-	sudo apt-get lightdm
+	sudo apt update
+	sudo apt upgrade
+	sudo apt install lightdm
 
 SSH:
 ~sudo apt install ssh
