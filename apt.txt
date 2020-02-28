@@ -77,8 +77,8 @@ MYSQL:
 
 
 WINE:
-~sudo apt wine-stable
-~sudo apt winetricks
+~sudo apt install wine-stable
+~sudo apt install winetricks
 ~winecfg
 ~winetricks
 --wine uninstaller
@@ -94,5 +94,31 @@ winetricks riched20 riched30
 winetricks vcrun2003 vcrun2005 vcrun2008
 winetricks mfc40 mfc42
 winetricks msxml3 msxml4 msxml6
+
+
+KVM:
+~sudo apt install qemu qemu-kvm libvirt-bin bridge-utils virt-manager
+~sudo service libvirtd start
+~sudo systemctl enable libvirtd.service
+~sudo service libvirtd status
+--A,桥接Bridge模式
+--编辑/etc/network/interfaces，增加如下内容
+	auto br0
+	iface br0 inet dhcp  # 网桥使用DHCP模式，从DHCP服务器获取IP
+	bridge_ports wlp3s0  # 网桥创建前连接外部的网卡名称，ifconfig命令查看有IP地址的就是
+	bridge_stp on  # 避免数据链路出现死循环
+	bridge_fd 0  # 将转发延迟设置为0
+--sudo systemctl restart networking.service  #重启networking服务
+*--编辑/etc/default/ufw允许ip转发
+--DEFAULT_FORWARD_POLICY="ACCEPT"
+--sudo systemctl restart ufw.service  #重启ufw服务
+--B,默认NAT模式
+--sudo virsh net-autostart default
+!--创建虚拟机-->
+
+
+
+
+
 
 
