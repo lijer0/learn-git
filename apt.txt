@@ -2,6 +2,10 @@
 --apt search vncserver  #'软件名'查询软件
 ~sudo apt install tree
 ~sudo apt install htop
+~sudo apt install vim
+--sudo su
+--echo 'set nu' > ~/.vimrc
+--echo 'set nu' >> {/etc/vim/vimrc,/etc/vimrc}
 --向日葵安装后~
 	sudo apt update
 	sudo apt upgrade
@@ -23,22 +27,6 @@ SSH:
 	user 用户名（服务端）
 	port 22
 	PermitRootLogin yes #是否允许root登陆
-
-
-VNC:
-~sudo apt update
-~sudo apt install xfce4 xfce4-goodies
-~sudo apt install tightvncserver
-~vncserver
-~vncserver -kill :1
---cp ~/.vnc/xstartup ~/bak/
---添加内容
---#!/bin/bash
---xrdb $HOME/.Xresources
---startxfce4 &
---sudo chmod +x ~/.vnc/xstartup
---servic vncserver start
---chkconfig vncserver on
 
 
 GIT:
