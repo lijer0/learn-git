@@ -26,21 +26,19 @@ SSH:
 
 
 VNC:
-~sudo apt install vnc4server
+~sudo apt update
+~sudo apt install xfce4 xfce4-goodies
+~sudo apt install tightvncserver
 ~vncserver
-~service vncserver restart
---编辑 ~/.vnc/xstartup 文件内容
-#!/bin/sh
-export XKL_XMODMAP_DISABLE=1
-unset SESSION_MANAGER
-unset DBUS_SESSION_BUS_ADDRESS
-gnome-panel &
-gnome-settings-daemon &
-metacity &
-nautilus &
-gnome-terminal &
-安装gnome后重启
-~sudo apt install gnome-panel gnome-settings-daemon metacity nautilus gnome-terminal
+~vncserver -kill :1
+--cp ~/.vnc/xstartup ~/bak/
+--添加内容
+--#!/bin/bash
+--xrdb $HOME/.Xresources
+--startxfce4 &
+--sudo chmod +x ~/.vnc/xstartup
+--servic vncserver start
+--chkconfig vncserver on
 
 
 GIT:
