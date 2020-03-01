@@ -1,94 +1,152 @@
 杂：
---apt search vncserver  #'软件名'查询软件
-~sudo apt install tree
-~sudo apt install htop
-~sudo apt install vim
---sudo su
---echo 'set nu' > ~/.vimrc
---echo 'set nu' >> {/etc/vim/vimrc,/etc/vimrc}
---向日葵安装后~
-	sudo apt update
-	sudo apt upgrade
-	sudo apt install lightdm
+apt search vncserver		#<软件名>查询软件
+sudo apt install tree
+sudo apt install htop
+
+向日葵安装后
+sudo apt update
+sudo apt upgrade
+sudo apt install lightdm
 
 
 SSH:
-~sudo apt install ssh
-*~sudo apt install openssh-server	＃服务端
-*~sudo apt install openssh-client	＃客户端
---service ssh start
-客户端操作：
---ssh-keygen
---ssh-copy-id user@IP（服务端）
-客户端配置：
-  ~/.ssh/config
-	host 别名（服务端）
-	hostname IP（服务端）
-	user 用户名（服务端）
+sudo apt install ssh
+*sudo apt install openssh-server	＃服务端
+*sudo apt install openssh-client	＃客户端
+service ssh start
+
+客户端操作
+ssh-keygen
+ssh-copy-id user@IP		#服务端
+
+客户端配置
+~/.ssh/config
+	host 别名		#服务端
+	hostname IP		#服务端
+	user 用户名	#服务端
 	port 22
-	PermitRootLogin yes #是否允许root登陆
+	PermitRootLogin yes 	#是否允许root登陆
+
+
+防火墙：
+sudo ufw status	#查看
+sudo ufw enable	#启用
+sudo ufw default deny	#关闭外部对本机访问
+sudo ufw allow 22/tcp	#打开22/tcp(ssh)端口
+sudo ufw allow/deny <>	#打开/关闭指定服务端口
+sudo ufw delete allow/deny <>	#删除某条规则
+
+
+VNC:
+sudo apt update
+sudo apt install xfce4 xfce4-goodies tightvncserver
+vncserver
+vncserver -kill :1
+cp ~/.vnc/xstartup ~/bak/
+
+修改 ~/.vnc/xstartup
+#!/bin/sh
+# Uncomment the following two lines for normal desktop:
+unset SESSION_MANAGER
+unset DBUS_SESSION_BUS_ADDRESS
+startxfce4 &
+
+编辑 /etc/systemd/system/vncserver@.service
+[Unit]
+Deion=Systemd VNC server startup for Ubuntu 18.04
+After=syslog.target network.target
+[Service]
+Type=forking
+User=rainmark
+#Group=rainmark
+#WorkingDirectory=/home/rainmark
+PIDFile=/home/rainmark/.vnc/%H:%i.pid
+ExecStartPre=-/usr/bin/vncserver -kill :%i > /dev/null 2>&1
+ExecStart=/usr/bin/vncserver -depth 24 -geometry 1280x720 :%i
+ExecStop=/usr/bin/vncserver -kill :%i
+[Install]
+WantedBy=multi-user.target
+
+sudo systemctl daemon-reload
+sudo systemctl enable vncserver@1
+sudo systemctl start vncserver@1
+sudo systemctl stop vncserver@1
+sudo systemctl status vncserver@1
 
 
 GIT:
-~sudo apt install git
---git config --global user.name 'lijer0'
---git config --global user.email 34694700@qq.com
---git config --list
---git init <目录> （创建仓库）
---git add <文件名> （1，添加）
---git status （查看修改 -s 简要信息）
---git diff <文件名> （查看详细）
---git commit -m <备注信息> （2，提交）（--git commit -am <备注> '省去 git add 操作'）
---git reset --hard HEAD^ （退回）
---git reset --hard <id号>
---git log （--oneline 简洁版;--reverse 逆向;--author 指定用户） --git reflog
---git checkout -- <文件名> （用版本库替换工作区文件）
---git rm <文件名> （其他参数：-f/-r/--cached） --git mv （移动或重命名）
---git clone <仓库地址> <本地目录> （克隆仓库）
---git branch （创建分支）（--git branch -d xxx 删除分支）
---git switch （切换分支）（--git switch -c xxx /--git checkout -b xxx 创建并切换）
---git merge （合并分支;-no-ff -m 'xxx'）
---git tag （标签）
---git stash （暂存工作区）
---git pull 
---git rebase 
-远程仓库github:
---git init
---git remote add origin git@github.com:lijer0/learn-git.git
---git push -u origin master (仅第一次使用添加 -u 参数，以后推送时省略)
+sudo apt install git
+git config --global user.name 'lijer0'
+git config --global user.email 34694700@qq.com
+git config --list
+
+git clone <仓库地址> <本地目录>	#克隆仓库
+添加远程仓库至github:
+cd <目录>
+git init
+git remote add origin git@github.com:lijer0/learn-git.git
+git push -u origin master	#仅第一次推送时添加 -u 参数，以后省略
+
+git init <目录> 		#创建仓库
+git add <文件名>		#1，添加
+git status			#查看修改 -s 简要信息
+git diff <文件名>		#查看详细
+git commit -m '<备注信息>'	#2，提交
+--git commit -am '<备注>' 	#'省去 git add 操作'
+git reset --hard HEAD^	#退回
+git reset --hard <id号>
+git log			#--oneline 简洁版;--reverse 逆向;--author 指定用户
+--git reflog
+git checkout -- <文件名>	#用版本库替换工作区文件
+git rm <文件名>		#其他参数：-f/-r/--cached
+--git mv			#移动或重命名
+git branch			#创建分支
+--git branch -d xxx		#删除分支
+git switch			#切换分支
+--git switch -c xxx		#创建并切换
+--git checkout -b xxx 	#创建并切换
+git merge			#合并分支;-no-ff -m '<备注>'
+git tag			#标签
+git stash			#暂存工作区
+git pull 
+git rebase 
 
 
 PYTHON:
-~sudo apt install python3
-~sudo apt install python3-pip
+sudo apt install python3
+sudo apt install python3-pip
 
 
 MYSQL:
-~sudo apt install mysql-server
-~sudo apt install mysql-client
-*~sudo apt install libmysqlclient-dev    //程序编译时链接的库
---service mysql start
---service mysql stop
---service mysql status
+sudo apt install mysql-server
+sudo apt install mysql-client
+*sudo apt install libmysqlclient-dev	#程序编译时链接的库
+service mysql start
+service mysql stop
+service mysql status
+
 默认密码问题：
---sudo cat /etc/mysql/debian.cnf 查看：<password>
---mysql -u debian-sys-maint -p<password>
---show databases;
---use mysql;
---update user set authentication_string=password('1234') where user='root';
---update user set plugin='mysql_native_password';
---flush privileges;
---quit;
---/etc/init.d/mysql restart 或--service mysql restart
+sudo cat /etc/mysql/debian.cnf		#查看：<password>
+mysql -u debian-sys-maint -p<password>
+show databases;
+use mysql;
+update user set authentication_string=password('1234') where user='root';
+update user set plugin='mysql_native_password';
+flush privileges;
+quit;
+service mysql restart
+--/etc/init.d/mysql restart
 
 
 WINE:
-~sudo apt install wine-stable
-~sudo apt install winetricks
-~winecfg
-~winetricks
---wine uninstaller
---wine xxx.exe	#--wine start xxx.xxx
+sudo apt install wine-stable
+sudo apt install winetricks
+winecfg
+winetricks
+wine uninstaller
+wine xxx.exe
+--wine start xxx.xxx
+
 运行Winetricks
 安装字体：corefonts
 安装DLL或组件：gdiplus d3dx9 vcrun2003 vcrun2005 vcrun2008 vcrun2010 riched20 riched30
@@ -97,29 +155,31 @@ winetricks fontfix fontsmooth-gray fontsmooth-rgb fontsmooth-bgr
 winetricks gdiplus
 winetricks d3dx9
 winetricks riched20 riched30
-winetricks vcrun2003 vcrun2005 vcrun2008
+winetricks vcrun2003 vcrun2005 vcrun2008 vcrun2010
 winetricks mfc40 mfc42
 winetricks msxml3 msxml4 msxml6
 
 
 KVM:
-~sudo apt install qemu qemu-kvm libvirt-bin bridge-utils virt-manager
-~sudo service libvirtd start
-~sudo systemctl enable libvirtd.service
-~sudo service libvirtd status
---A,桥接Bridge模式
---编辑/etc/network/interfaces，增加如下内容
-	auto br0
-	iface br0 inet dhcp  # 网桥使用DHCP模式，从DHCP服务器获取IP
-	bridge_ports wlp3s0  # 网桥创建前连接外部的网卡名称，ifconfig命令查看有IP地址的就是
-	bridge_stp on  # 避免数据链路出现死循环
-	bridge_fd 0  # 将转发延迟设置为0
---sudo systemctl restart networking.service  #重启networking服务
-*--编辑/etc/default/ufw允许ip转发
---DEFAULT_FORWARD_POLICY="ACCEPT"
---sudo systemctl restart ufw.service  #重启ufw服务
---B,默认NAT模式
---sudo virsh net-autostart default
+sudo apt install qemu qemu-kvm libvirt-bin bridge-utils virt-manager
+sudo service libvirtd start
+sudo systemctl enable libvirtd.service
+sudo service libvirtd status
+
+A,桥接Bridge模式
+编辑/etc/network/interfaces  增加如下内容
+auto br0
+iface br0 inet dhcp	# 网桥使用DHCP模式，从DHCP服务器获取IP
+bridge_ports wlp3s0	# 网桥创建前连接外部的网卡名称，ifconfig命令查看有IP地址的
+bridge_stp on	# 避免数据链路出现死循环
+bridge_fd 0	# 将转发延迟设置为0
+sudo systemctl restart networking.service	#重启networking服务
+编辑/etc/default/ufw  允许ip转发
+DEFAULT_FORWARD_POLICY="ACCEPT"
+sudo systemctl restart ufw.service	#重启ufw服务
+
+B,默认NAT模式
+sudo virsh net-autostart default
 !--创建虚拟机-->
 
 
