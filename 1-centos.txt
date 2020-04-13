@@ -1,0 +1,169 @@
+sudo yum install ibus-table-chinese-wubi-jidian.noarch
+sudo yum localinstall google-chrome-stable_xxx.rpm
+sudo yum tree
+
+依赖：
+yum install yum-utils
+repotrack ‘软件名’
+
+
+SSH:
+sudo yum install ssh
+*sudo yum install openssh-server	＃服务端
+*sudo yum install openssh-client	＃客户端
+service ssh start
+
+客户端操作
+ssh-keygen
+ssh-copy-id user@IP		#服务端
+
+客户端配置
+~/.ssh/config
+	host 别名		#服务端
+	hostname IP	#服务端
+	user 用户名	#服务端
+	port 22
+	PermitRootLogin yes 	#是否允许root登陆
+
+
+防火墙：
+systemctl status firewalld
+firewall-cmd --state
+service firewalld start	# 开启
+service firewalld restart	# 重启
+service firewalld stop		# 关闭
+firewall-cmd --list-all 	#查看防火墙规则
+firewall-cmd --add-port=80/tcp --permanent	# 开放80端口
+firewall-cmd --remove-port=80/tcp --permanent	# 移除80端口规则
+firewall-cmd --query-port=80/tcp		# 查询端口是否开放
+firewall-cmd --reload	#重启防火墙(修改配置后要重启防火墙)
+
+
+VNC:
+sudo yum install tigervnc-server
+sudo cp /lib/systemd/system/vncserver@.service /etc/systemd/system/vnserver@:1.service
+sudo vim /etc/systemd/system/vnserver@:1.service
+
+[Unit]
+Description=Remote desktop service (VNC)
+After=syslog.target network.target
+[Service]
+Type=forking
+User=root
+# Clean any existing files in /tmp/.X11-unix environment
+ExecStartPre=/bin/sh -c '/usr/bin/vncserver -kill %i > /dev/null 2>&1 || :'
+ExecStart=/usr/sbin/runuser -l root -c '/usr/bin/vncserver %i'
+PIDFile=/home/root/.vnc/%H%i.pid
+ExecStop=/bin/sh -c '/usr/bin/vncserver -kill %i > /dev/null 2>&1 || :'
+[Install]
+WantedBy=multi-user.target
+
+sudo systemctl daemon-reload
+sudo systemctl enable vncserver@:1
+sudo systemctl start vncserver@:1
+sudo systemctl stop vncserver@:1
+sudo systemctl status vncserver@:1
+
+
+GIT:
+sudo yum install git
+git config --global user.name 'lijer0'
+git config --global user.email 34694700@qq.com
+git config --list
+
+git clone <仓库地址> <本地目录>	#克隆仓库
+git clone git@github.com:lijer0/learn-git.git Desktop/learn-git
+添加远程仓库至github:
+cd <目录>
+git init
+git remote add origin git@github.com:lijer0/learn-git.git
+git push -u origin master	#仅第一次推送时添加 -u 参数，以后省略
+
+git init <目录> 		#创建仓库
+git add <文件名>		#1，添加
+git status			#查看修改 -s 简要信息
+git diff <文件名>		#查看详细
+git commit -m '<备注信息>'	#2，提交
+--git commit -am '<备注>' 	#'省去 git add 操作'
+git reset --hard HEAD^	#退回
+git reset --hard <id号>
+git log			#--oneline 简洁版;--reverse 逆向;--author 指定用户
+--git reflog
+git checkout -- <文件名>	#用版本库替换工作区文件
+git rm <文件名>		#其他参数：-f/-r/--cached
+--git mv			#移动或重命名
+git branch			#创建分支
+--git branch -d xxx		#删除分支
+git switch			#切换分支
+--git switch -c xxx		#创建并切换
+--git checkout -b xxx 	#创建并切换
+git merge			#合并分支;-no-ff -m '<备注>'
+git tag			#标签
+git stash			#暂存工作区
+git pull 
+git rebase 
+
+
+MYSQL:
+wget -i -c http://dev.mysql.com/get/mysql57-community-release-el7-10.noarch.rpm
+yum -y install mysql57-community-release-el7-10.noarch.rpm
+
+sudo yum install mysql-community-server
+service mysqld start
+service mysqld stop
+service mysqld status
+
+默认密码问题：
+cat /var/log/mysqld.log | grep 'password'
+mysql -uroot -p<password>		#使用上一步获得的 password
+ALTER USER 'root'@'localhost' IDENTIFIED BY 'Li-059118';
+exit;
+sudo vim /etc/my.cnf
+	#添加validate_password_policy配置
+	validate_password_policy=0
+	#关闭密码策略
+	validate_password = off
+	[mysqld]	#修改mysql字符编码
+	character_set_server=utf8
+	init_connect='SET NAMES utf8'
+service mysqld restart
+mysql -uroot -p<password>
+set password for root@localhost = password('059118'); 
+
+*show variables like '%password%';	#查看密码策略
+*show variables like '%character%';	#查看字符编码
+
+开启远程访问：
+grant all privileges on *.* to 'root'@'<ip地址>' identified by 'password' with grant option;
+flush privileges; 
+exit;
+
+
+LNMPA:
+yum install -y wget && wget -O install.sh https://download.xp.cn/install.sh && sh install.sh
+
+yum install  gcc gcc-c++ autoconf automake cmake make openssl openssl-devel pcre pcre-devel
+yum install perl perl-ExtUtile-Embed zlib zlib-devel
+yum install bison ncurses-devel libxml2-devel libtool-ltdl-devel
+
+yum install httpd
+service httpd start
+
+rpm -Uvh https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+rpm -Uvh https://mirror.webtatic.com/yum/el7/webtatic-release.rpm
+sudo yum install php72w
+yum install php72w-common php72w-fpm php72w-opcache php72w-gd php72w-mysqlnd php72w-mbstring php72w-pecl-redis php72w-pecl-memcached php72w-devel
+
+
+Zabbix：
+https://www.zabbix.com/cn/download
+vim /etc/selinux/config
+SELINUX=permissive（enforcing、permissive、disabled）
+setenforce 0
+
+NTP：
+sudo apt install ntp ntpdate
+ntpdate ntp.ntsc.ac.cn
+vim /ect/ntp.conf
+date.timezone=Asia/Shanghai
+
